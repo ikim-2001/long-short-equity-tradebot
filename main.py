@@ -74,7 +74,14 @@ def buy_and_sell(symbol, window):
   print(f"START PRICE {start_price}\n")
   PL = 0
   for i in range(len(move_avg_close)):
-    # print(move_avg_volume[i])
+    # buy if moving volume is less than current volume and moving close is greater than current cost!!
+    # BUY CONDITIONS: low avgVol, high currVol & high avgPrice, low currPrice
+    # score: rankFactor = CurrVol/AvgVol + AvgClose/CurrClose
+    # SELL CONDITIONS: high avgVol, low currVol & low avgPrice, high currPrice
+    # score: rankFactor = - AvgVol/currVal - currClose / avgClose
+    # the smaller the rank factor, the better the rank!!
+
+
     if move_avg_volume[i][-1] and move_avg_close[i][-1]:
       if z == 1:
         close_adj = move_avg_close[i]
@@ -95,10 +102,10 @@ def buy_and_sell(symbol, window):
         unix_moment = time.mktime(close_adj[0].timetuple())
         ax.add_patch(Rectangle((unix_moment-0.01 * 10 ** 7, close_adj[2]-1.5), 0.02 * 10 ** 7, 3, facecolor='red', edgecolor = 'black', fill=True, lw=1))
         z += 1
-# buy_and_sell("GOOGL", 20)
-# buy_and_sell("AAPL", 20)
-# buy_and_sell("AMZN", 20)
-# plt.show()
+buy_and_sell("GOOGL", 20)
+buy_and_sell("AAPL", 20)
+buy_and_sell("AMZN", 20)
+plt.show()
 
 
 
@@ -115,5 +122,5 @@ def create_order(symbol, qty, side, type, time_in_force):
 
   return json.loads(r.content)
 
-response = create_order("GOOGL", 5, "buy", "market", "gtc")
-print(response)
+# response = create_order("GOOGL", 5, "buy", "market", "gtc")
+# print(response)
